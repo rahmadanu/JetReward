@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,11 +23,11 @@ import com.dicoding.jetreward.ui.ViewModelFactory
 import com.dicoding.jetreward.ui.common.UiState
 import com.dicoding.jetreward.ui.components.CartItem
 import com.dicoding.jetreward.ui.components.OrderButton
+import com.dicoding.jetreward.ui.theme.JetRewardTheme
 
 
 @Composable
 fun CartScreen(
-    modifier: Modifier = Modifier,
     viewModel: CartViewModel = viewModel(
         factory = ViewModelFactory(
             Injection.provideRepository()
@@ -70,28 +71,36 @@ fun CartContent(
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center,
             )
-            OrderButton(
-                text = stringResource(R.string.total_order, state.totalRequiredPoint),
-                enabled = state.orderReward.isNotEmpty(),
-                onClick = {},
-                modifier = Modifier.padding(16.dp)
-            ) 
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(state.orderReward, key = { it.reward.id }) { item ->
-                    CartItem(
-                        rewardId = item.reward.id,
-                        image = item.reward.image,
-                        title = item.reward.title,
-                        totalPoint = item.reward.requiredPoint * item.count,
-                        count = item.count,
-                        onProductCountChanged = onProductCountChanged
-                    )
-                    Divider()
-                }
+        }
+        OrderButton(
+            text = stringResource(R.string.total_order, state.totalRequiredPoint),
+            enabled = state.orderReward.isNotEmpty(),
+            onClick = {},
+            modifier = Modifier.padding(16.dp)
+        )
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(state.orderReward, key = { it.reward.id }) { item ->
+                CartItem(
+                    rewardId = item.reward.id,
+                    image = item.reward.image,
+                    title = item.reward.title,
+                    totalPoint = item.reward.requiredPoint * item.count,
+                    count = item.count,
+                    onProductCountChanged = onProductCountChanged
+                )
+                Divider()
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CartScreenPreview() {
+    JetRewardTheme {
+        CartScreen()
     }
 }
